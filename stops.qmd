@@ -2,5 +2,15 @@
 title: "Stops"
 author: "Jack Xu"
 format: html
+execute: 
+  echo: false
 ---
 
+```{r}
+#| message: false
+library(tidyverse)
+library(primer.data)
+```
+
+# Summary
+Traffic stops have people of different races, some of those people can get arrested. We want to understand the difference in arrest rates between Black and White drivers in New Orleans, based on data from the Stanford Open Policing Project.
