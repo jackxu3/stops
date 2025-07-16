@@ -12,5 +12,13 @@ library(tidyverse)
 library(primer.data)
 ```
 
+```{r}
+#| label: eda
+x <- stops |>
+  filter(race %in% c("black", "white")) |>
+  mutate(race = str_to_title(race), 
+         sex = str_to_title(sex))
+```
+
 # Summary
-Traffic stops have people of different races, some of those people can get arrested. We want to understand the difference in arrest rates between Black and White drivers in New Orleans, based on data from the Stanford Open Policing Project.
+Traffic stops have people of different races, some of those people can get arrested. We want to understand the difference in arrest rates between Black and White drivers in New Orleans, based on data from the Stanford Open Policing Project. We understood that the population represents all drivers for finding the true quantity of interest and described the biasing factors, including changing arrest policies and biased officers, that may affect the data. One of those misleading factors was that arrest laws change over time, which makes the data unrepresentative of the population.
