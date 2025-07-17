@@ -6,10 +6,22 @@ execute:
   echo: false
 ---
 
+**Logistic Function**
+$$
+\text{logit}(\Pr(Y = 1)) = \log\left(\frac{\Pr(Y = 1)}{1 - \Pr(Y = 1)}\right) = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \cdots + \beta_k X_k
+$$
+
+**Fitted Model**
+$$
+\widehat{P}(Y = 1) = \frac{1}{1 + \exp\left( - \left( 0.204 + 0.0631 \times \text{sexMale} - 0.0450 \times \text{raceWhite} \right) \right)}
+$$
+
 ```{r}
 #| message: false
 library(tidyverse)
 library(primer.data)
+library(tidymodels)
+library(broom)
 ```
 
 ```{r}
@@ -18,6 +30,13 @@ x <- stops |>
   filter(race %in% c("black", "white")) |>
   mutate(race = str_to_title(race), 
          sex = str_to_title(sex))
+```
+
+```{r}
+#| cache: true
+fit_stops <- linear_reg(engine = "lm") |>
+  fit(arrested ~ sex + race*zone, data = x) |>
+  tidy(conf.int = TRUE)
 ```
 
 # Summary

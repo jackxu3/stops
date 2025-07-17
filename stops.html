@@ -36,6 +36,35 @@ ul.task-list li input[type="checkbox"] {
 <link href="stops_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="stops_files/libs/bootstrap/bootstrap-81267100e462c21b3d6c0d5bf76a3417.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -70,6 +99,12 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<p><strong>Logistic Function</strong> <span class="math display">\[
+\text{logit}(\Pr(Y = 1)) = \log\left(\frac{\Pr(Y = 1)}{1 - \Pr(Y = 1)}\right) = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \cdots + \beta_k X_k
+\]</span></p>
+<p><strong>Fitted Model</strong> <span class="math display">\[
+\widehat{P}(Y = 1) = \frac{1}{1 + \exp\left( - \left( 0.204 + 0.0631 \times \text{sexMale} - 0.0450 \times \text{raceWhite} \right) \right)}
+\]</span></p>
 <section id="summary" class="level1">
 <h1>Summary</h1>
 <p>Traffic stops have people of different races, some of those people can get arrested. We want to understand the difference in arrest rates between Black and White drivers in New Orleans, based on data from the Stanford Open Policing Project. We understood that the population represents all drivers for finding the true quantity of interest and described the biasing factors, including changing arrest policies and biased officers, that may affect the data. One of those misleading factors was that arrest laws change over time, which makes the data unrepresentative of the population.</p>
