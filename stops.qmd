@@ -6,14 +6,14 @@ execute:
   echo: false
 ---
 
-**Logistic Function**
+**Linear Function**
 $$
-\text{logit}(\Pr(Y = 1)) = \log\left(\frac{\Pr(Y = 1)}{1 - \Pr(Y = 1)}\right) = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \cdots + \beta_k X_k
+Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \cdots + \beta_k X_k + \varepsilon
 $$
 
 **Fitted Model**
 $$
-\widehat{P}(Y = 1) = \frac{1}{1 + \exp\left( - \left( 0.204 + 0.0631 \times \text{sexMale} - 0.0450 \times \text{raceWhite} \right) \right)}
+\widehat{Y} = 0.204 + 0.0631 \times \text{sex}_{\text{Male}} - 0.0450 \times \text{race}_{\text{White}}
 $$
 
 ```{r}
@@ -23,6 +23,8 @@ library(primer.data)
 library(tidymodels)
 library(broom)
 library(knitr)
+library(marginaleffects)
+library(tidytext)
 ```
 
 ```{r}
@@ -35,8 +37,10 @@ x <- stops |>
 
 ```{r}
 #| cache: true
-fit_stops <- linear_reg(engine = "lm") |>
-  fit(arrested ~ sex + race*zone, data = x) |>
+fit_stops_model <- linear_reg(engine = "lm") |>
+  fit(arrested ~ sex + race*zone, data = x)
+
+fit_stops <- fit_stops_model |>
   tidy(conf.int = TRUE)
 ```
 
@@ -48,5 +52,38 @@ fit_stops %>%
   kable()
 ```
 
+# Plot
+```{r}
+plot_predictions(fit_stops_model,
+                 newdata = "balanced",
+                 condition = c("zone", "race", "sex"),
+                 draw = FALSE) |> as_tibble() |> 
+  group_by(zone, sex) |>
+  mutate(sort_order = estimate[race == "Black"]) |>
+  ungroup() |>
+  mutate(zone = reorder_within(zone, sort_order, sex)) |>
+  ggplot(aes(x = zone, 
+             color = race)) +
+  geom_errorbar(aes(ymin = conf.low, 
+                    ymax = conf.high), 
+                width = 0.2,
+                position = position_dodge(width = 0.5)) +
+  geom_point(aes(y = estimate), 
+             size = 1, 
+             position = position_dodge(width = 0.5)) +
+  facet_wrap(~ sex, scales = "free_x") +
+  scale_x_reordered() +
+  theme(axis.text.x = element_text(size = 8)) +
+  scale_y_continuous(labels = percent_format()) +
+  labs(
+    title = "Arrest Rates of White and Black Motorists in Traffic Stops",
+    subtitle = "White motorists usually have less arrest rates than Black motorists",
+    caption = "Data: Stanford Open Policing Project (2018)",
+    x = "Zone",
+    y = "Arrest Rate",
+    color = "Race"
+  )
+```
+
 # Summary
-Traffic stops have people of different races, some of those people can get arrested. We want to understand the difference in arrest rates between Black and White drivers in New Orleans, based on data from the Stanford Open Policing Project. We understood that the population represents all drivers for finding the true quantity of interest and described the biasing factors, including changing arrest policies and biased officers, that may affect the data. One of those misleading factors was that arrest laws change over time, which makes the data unrepresentative of the population. I model rates of arrest, a variable holding either TRUE or FALSE, as a logistic function of "sex", "race", and "zone". This shows us that White drivers are less likely of getting arrested than females.
+Traffic stops have people of different races, some of those people can get arrested. We want to understand the difference in arrest rates between Black and White drivers in New Orleans, based on data from the Stanford Open Policing Project. We understood that the population represents all drivers for finding the true quantity of interest and described the biasing factors, including changing arrest policies and biased officers, that may affect the data. One of those misleading factors was that arrest laws change over time, which makes the data unrepresentative of the population. I model rates of arrest, a variable holding either TRUE or FALSE, as a linear function of "sex", "race", and "zone". This shows us that White drivers are less likely of getting arrested than Black drivers. Our quantity of interest is the difference of arrest rates between White and Black motorists. Using the approximate information from the fitted model, the probability is about 24.7% for a Black driver getting arrested and 20.3% for a White driver getting arrested.

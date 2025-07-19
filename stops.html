@@ -99,11 +99,11 @@ window.Quarto = {
 </header>
 
 
-<p><strong>Logistic Function</strong> <span class="math display">\[
-\text{logit}(\Pr(Y = 1)) = \log\left(\frac{\Pr(Y = 1)}{1 - \Pr(Y = 1)}\right) = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \cdots + \beta_k X_k
+<p><strong>Linear Function</strong> <span class="math display">\[
+Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \cdots + \beta_k X_k + \varepsilon
 \]</span></p>
 <p><strong>Fitted Model</strong> <span class="math display">\[
-\widehat{P}(Y = 1) = \frac{1}{1 + \exp\left( - \left( 0.204 + 0.0631 \times \text{sexMale} - 0.0450 \times \text{raceWhite} \right) \right)}
+\widehat{Y} = 0.204 + 0.0631 \times \text{sex}_{\text{Male}} - 0.0450 \times \text{race}_{\text{White}}
 \]</span></p>
 <p><strong>Estimates and Confience Intervals of the Model</strong></p>
 <div class="cell">
@@ -428,9 +428,21 @@ window.Quarto = {
 </table>
 </div>
 </div>
+<section id="plot" class="level1">
+<h1>Plot</h1>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="stops_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
 <section id="summary" class="level1">
 <h1>Summary</h1>
-<p>Traffic stops have people of different races, some of those people can get arrested. We want to understand the difference in arrest rates between Black and White drivers in New Orleans, based on data from the Stanford Open Policing Project. We understood that the population represents all drivers for finding the true quantity of interest and described the biasing factors, including changing arrest policies and biased officers, that may affect the data. One of those misleading factors was that arrest laws change over time, which makes the data unrepresentative of the population. I model rates of arrest, a variable holding either TRUE or FALSE, as a logistic function of “sex”, “race”, and “zone”. This shows us that White drivers are less likely of getting arrested than females.</p>
+<p>Traffic stops have people of different races, some of those people can get arrested. We want to understand the difference in arrest rates between Black and White drivers in New Orleans, based on data from the Stanford Open Policing Project. We understood that the population represents all drivers for finding the true quantity of interest and described the biasing factors, including changing arrest policies and biased officers, that may affect the data. One of those misleading factors was that arrest laws change over time, which makes the data unrepresentative of the population. I model rates of arrest, a variable holding either TRUE or FALSE, as a linear function of “sex”, “race”, and “zone”. This shows us that White drivers are less likely of getting arrested than Black drivers. Our quantity of interest is the difference of arrest rates between White and Black motorists. Using the approximate information from the fitted model, the probability is about 24.7% for a Black driver getting arrested and 20.3% for a White driver getting arrested.</p>
 </section>
 
 </main>
